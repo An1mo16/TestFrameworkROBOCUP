@@ -22,7 +22,7 @@ public class DtWalkToBall implements Runnable, ITestCaseObserver {
 	@Override
 	public void run() {
 		
-		GP ga = new GP("dtWalk2Ball", 1000);
+		GP ga = new GP("dtWalk2Ball", 1000,50);
 		
 		while(ga.ConditionSatisfied()){
 			

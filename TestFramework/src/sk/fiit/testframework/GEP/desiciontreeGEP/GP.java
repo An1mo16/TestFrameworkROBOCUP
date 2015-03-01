@@ -30,56 +30,36 @@ import sk.fiit.testframework.trainer.testsuite.TestCaseResult;
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.DtWalkToBallTest;
 
 public class GP {
-	public int populationLength = 50;
+	public int populationLength;
 	public List<String> Population = null; 
 	public List<List<Double>> PopulationData = null;
-	public double maxFitness;
-	public double goalFitness;
-	public String maxFitnessFile;
-	public Random rand = new Random(System.currentTimeMillis() );
+	private double maxFitness;
+	private double goalFitness;
+	private String maxFitnessFile;
+	private Random rand = new Random(System.currentTimeMillis() );
 	
-	Map<String, Integer> agentVariables = new HashMap<String, Integer>();
-	Map<String, Integer> desicions = new HashMap<String, Integer>();
-	Map<String, Integer> functions = new HashMap<String, Integer>();
-	Map<String, Integer> parameters = new HashMap<String, Integer>();
-	Map<String, Integer> angles = new HashMap<String, Integer>();
-	Map<String, Integer> treeDepth = new HashMap<String, Integer>();
-	Map<String, Integer> lowSkills = new HashMap<String, Integer>();
-	
-	int agentVar1;
-	int agentVar2;
-	int desicion1;
-	int desicion2;
-	int treeDepth1;
-	int treeDepth2;
-	int func1;
-	int func2;
-	int angle1;
-	int angle2;
-	int param1;
-	int param2;
-	int lowSkill1;
-	int lowSkill2;
+	private Map<String, Integer> agentVariables = new HashMap<String, Integer>();
+	private Map<String, Integer> desicions = new HashMap<String, Integer>();
+	private Map<String, Integer> functions = new HashMap<String, Integer>();
+	private Map<String, Integer> parameters = new HashMap<String, Integer>();
+	private Map<String, Integer> angles = new HashMap<String, Integer>();
+	private Map<String, Integer> treeDepth = new HashMap<String, Integer>();
+	private Map<String, Integer> lowSkills = new HashMap<String, Integer>();
 	
 	private String pathOfDt;
 	
-	public GP(String path, double goalF){
+	public GP(String path, double goalF, int popLength){
 		agentVariables.put("r", 101);
 		agentVariables.put("x", 102);
 		agentVariables.put("y", 103);
-		agentVar1 = 101;
-		agentVar2 = 103;
 				
 		desicions.put("lowerThen", 110);
 		desicions.put("biggerThen", 111);
 		desicions.put("else", 112);
-		desicion1 = 110;
-		desicion2 = 112;
+
 		treeDepth.put("lowerLevel", -50);
 		treeDepth.put("sameLevel", -51);
 		treeDepth.put("higherLevel", -52);
-		treeDepth1 = -50;
-		treeDepth2 = -52;
 		
 		functions.put("straight", 20);
 		functions.put("right_and_distant", 21);
@@ -88,16 +68,12 @@ public class GP {
 		functions.put("left_and_distant", 24);
 		functions.put("left_and_distant_less", 25);
 		functions.put("left_and_distant_bit", 26);
-		func1 = 20;
-		func2 = 26;
 
 		parameters.put("closeDistance", 1);
 		parameters.put("x1", 2);
 		parameters.put("x2", 3);
 		parameters.put("y1", 4);
 		parameters.put("y2", 5);
-		param1 = 1;
-		param2 = 5;
 		
 		angles.put("straightRange1", 6);
 		angles.put("straightRange2", 7);
@@ -107,8 +83,6 @@ public class GP {
 		angles.put("leftRange", 11);
 		angles.put("leftRange2", 12);
 		angles.put("leftRange3", 13);
-		angle1 = 6;
-		angle2 = 13;
 
 	//	lowSkills.put("null", 49);
 	//	lowSkills.put("step_circ_left_small", 50);
@@ -135,8 +109,6 @@ public class GP {
 		lowSkills.put("turn_right_cont_20", 71);
 		lowSkills.put("turn_left_cont_20", 72);
 		//lowSkills.put("rollback", 73);
-		lowSkill1 = 54;
-		lowSkill2 = 72;
 		/*lowSkills.put("turn_right_cont_10", 68);
 		lowSkills.put("turn_right_cont_20", 69);
 		lowSkills.put("turn_right_cont_4.5", 70);
@@ -147,7 +119,8 @@ public class GP {
 		lowSkills.put("turn_left_cont_6.5", 63);*/
 		
 		pathOfDt = path;
-		this.goalFitness = goalF;
+		goalFitness = goalF;
+		populationLength = popLength;
 		Population = new ArrayList<String>();
 		PopulationData = new ArrayList<List<Double>>();
 		
