@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="windows-1250"?>
+
+<config> 
+   <phases> 
+     <phase name="lift_leg">
+      <duration from="0" to="0" step="0" /> <!-- ma tu byt, ked nechcem menit? -->
+      <effectors> 
+        <lle3 from="-4" to="4" step="2" />
+        <lle4 from="-5" to="5" step="5" />
+        <lle5 from="-6" to="6" step="2" /> <!-- toto by sa dalo zmenit na rozsah <-4, 4> -->
+      </effectors> 
+     </phase> 
+     <phase name="kickit">
+      <duration from="-40" to="10" step="10" /> 
+      <effectors>  
+        <lle4 from="-10" to="15" step="5" />
+        <lle5 from="-4" to="4" step="2" />  <!-- toto by sa mozno dalo vypustit -->       
+      </effectors> 
+     </phase> 
+   </phases> 
+</config> 

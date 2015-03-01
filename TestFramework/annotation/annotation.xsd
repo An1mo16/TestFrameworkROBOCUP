@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="annotation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string" maxOccurs="1" />
+				<xs:element name="description" type="descriptionType" maxOccurs="1" />
+				<xs:element name="preconditions" type="stateType" minOccurs="0" maxOccurs="1" />
+				<xs:element name="end_state" type="stateType" maxOccurs="1" />
+				<xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="1" />						<!-- poznamka k pohybu -->
+				<xs:element name="checksum" type="checksumType" minOccurs="0" maxOccurs="1" />		<!-- chcecksum suboru s anotovanym pohybom -->
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- predpokladany stav robota -->
+	<xs:complexType name="stateType">
+		<xs:sequence>
+			<xs:element name="lying" type="lyingType" default="false" maxOccurs="1" />
+			<xs:element name="ball_position" type="ballPositionType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="ball_positions_circle" type="circleType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="joints" type="jointsType" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>                
+	
+	<!-- detaily pohybu -->
+	<xs:complexType name="descriptionType">
+		<xs:sequence>
+			<xs:element name="duration" type="valType" maxOccurs="1" />								<!-- doba trvania pohybu (ms)-->
+			<xs:element name="rotation" type="rotationType" minOccurs="0" maxOccurs="1" />			<!-- uhol, o ktory sa robot otocil -->
+			<xs:element name="move" type="moveType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="fall" type="fallType" maxOccurs="1" default="0" />					<!-- pravdepodobnost padu v percentach -->
+			<xs:element name="ball_distance" type="valType" minOccurs="0" maxOccurs="1" />			<!-- absolutne posunutie lopty po XY suradniciach pocas vykonavania pohybu -->			
+      		<xs:element name="max_ball_distance_position" type="pointType" minOccurs="0" maxOccurs="1" />			<!-- inicialna poloha lopty, pri ktorej bol dosiahnuty najdlhsi kop -->			
+			<xs:element name="ball_move" type="moveType" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- xy kruh -->
+	<xs:complexType name="circleType">
+		<xs:sequence>
+			<xs:element name="x" type="xs:double" minOccurs="0" maxOccurs="1" />
+			<xs:element name="y" type="xs:double" minOccurs="0" maxOccurs="1" />
+			<xs:element name="r" type="xs:double" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- 3D bod -->
+	<xs:complexType name="pointType">
+		<xs:sequence>
+			<xs:element name="x" type="xs:double" minOccurs="0" maxOccurs="1" />
+			<xs:element name="y" type="xs:double" minOccurs="0" maxOccurs="1" />
+			<xs:element name="z" type="xs:double" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- osi otacania robota, momentalne vyuzitelna iba os Z -->
+	<xs:complexType name="rotationType">
+		<xs:sequence>
+			<xs:element name="x-axis" type="valType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="y-axis" type="valType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="z-axis" type="valType" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- o kolko sa robot pocas vykonavania pohybu posunie v smere jednotlivych osi (v milimetroch) -->
+	<xs:complexType name="moveType">
+		<xs:sequence>
+			<xs:element name="x-axis" type="valType" maxOccurs="1" />
+			<xs:element name="y-axis" type="valType" maxOccurs="1" />
+			<xs:element name="z-axis" type="valType" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- pravdepodobnost padu v rozmedzi 0 az 100 percent -->
+	<xs:simpleType name="fallType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- checksum pre kontrolu aktualnosti anotacie -->
+	<xs:complexType name="checksumType">
+		<xs:simpleContent>			
+			<xs:extension base="xs:string">
+				<xs:attribute name="algorith" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<!-- ako lezi robot -->
+	<xs:simpleType name="lyingType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="false" />		<!-- pokial robot stoji -->
+			<xs:enumeration value="on_back" />
+			<xs:enumeration value="on_belly" />
+			<xs:enumeration value="on_side" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- relativna pozicia lopty z pohladu hraca -->
+	<xs:complexType name="ballPositionType">
+		<xs:sequence>
+			<xs:element name="x-axis" type="valType" maxOccurs="1" />
+			<xs:element name="y-axis" type="valType" maxOccurs="1" />
+			<xs:element name="z-axis" type="valType" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!--stav klbov -->
+	<xs:complexType name="jointsType">
+		<xs:all>
+    		<xs:element name="he1" type="he1Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="he2" type="he2Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rle1" type="rle1Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rle2" type="rle2Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rle3" type="rle3Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rle4" type="rle4Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rle5" type="rle5Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rle6" type="rle6Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rae1" type="rae1Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rae2" type="rae2Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rae3" type="rae3Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="rae4" type="rae4Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lle1" type="lle1Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lle2" type="lle2Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lle3" type="lle3Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lle4" type="lle4Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lle5" type="lle5Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lle6" type="lle6Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lae1" type="lae1Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lae2" type="lae2Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lae3" type="lae3Type" minOccurs="0" maxOccurs="1" default="0" />
+			<xs:element name="lae4" type="lae4Type" minOccurs="0" maxOccurs="1" default="0" />
+    	</xs:all>
+	</xs:complexType>
+	
+	<!-- rozptyl hodnot niektorych atributov -->
+	<xs:complexType name="valType">
+		<xs:sequence>
+			<xs:element name="min" type="xs:double" minOccurs="0" maxOccurs="1" />
+			<xs:element name="max" type="xs:double" minOccurs="0" maxOccurs="1" />
+			<xs:element name="avg" type="xs:double" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- uhly v ktorych sa mozu otacat klby -->
+	<xs:simpleType name="he1Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-120"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="he2Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-45"/>
+			<xs:maxInclusive value="45"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rle1Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-90"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rle2Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-45"/>
+			<xs:maxInclusive value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rle3Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-25"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rle4Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-130"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rle5Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-45"/>
+			<xs:maxInclusive value="75"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rle6Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-25"/>
+			<xs:maxInclusive value="45"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rae1Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-120"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rae2Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-95"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rae3Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-120"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rae4Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="90"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lle1Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-90"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lle2Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-25"/>
+			<xs:maxInclusive value="45"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lle3Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-25"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lle4Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-130"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lle5Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-45"/>
+			<xs:maxInclusive value="75"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lle6Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-45"/>
+			<xs:maxInclusive value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lae1Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-120"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lae2Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="95"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lae3Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-120"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="lae4Type">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-90"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,59 @@
+<config>
+	<phases>
+		<phase name="walk_fine_fast1_1">
+			<duration from="-200" to="0" step="20" />
+			<effectors>
+				<rle2 from="-2" to="3" step="1" />
+				<lle2 synPhase="walk_fine_fast1_1" synEffector="rle2" const="-1" />
+				<rle5 from="-10" to="10" step="5" />
+				<lle5 synPhase="walk_fine_fast1_1" synEffector="rle5" const="1" />
+				<rle6 from="-3" to="2" step="1" />
+				<lle6 synPhase="walk_fine_fast1_1" synEffector="rle6" const="-1" />
+			</effectors>
+		</phase>
+		<phase name="walk_fine_fast1_2">
+			<duration from="-50" to="50" step="10" />
+			<effectors>
+				<rle3 from="-10" to="10" step="5" />
+				<rle4 from="-10" to="10" step="5" />
+				<rle5 from="-10" to="10" step="5" />
+				<lle3 from="-10" to="10" step="5" />
+				<lle4 from="-10" to="10" step="5" />
+				<lle5 from="-10" to="10" step="5" />
+			</effectors>
+		</phase>
+		<phase name="walk_fine_fast1_3">
+			<duration from="-50" to="50" step="10" />
+			<effectors>
+				<rle3 from="-10" to="10" step="5" />
+				<rle4 from="-10" to="10" step="5" />
+				<rle5 from="-10" to="10" step="5" />
+				<lle3 from="-10" to="10" step="5" />
+				<lle4 from="-10" to="10" step="5" />
+				<lle5 from="-10" to="10" step="5" />
+			</effectors>
+		</phase>
+		<phase name="walk_fine_fast1_4">
+			<duration synPhase="walk_fine_fast1_2" const="1" />
+			<effectors>
+				<lle3 synPhase="walk_fine_fast1_2" synEffector="rle3" const="1" />
+				<lle4 synPhase="walk_fine_fast1_2" synEffector="rle4" const="1" />
+				<lle5 synPhase="walk_fine_fast1_2" synEffector="rle5" const="1" />
+				<rle3 synPhase="walk_fine_fast1_2" synEffector="lle3" const="1" />
+				<rle4 synPhase="walk_fine_fast1_2" synEffector="lle4" const="1" />
+				<rle5 synPhase="walk_fine_fast1_2" synEffector="lle5" const="1" />
+			</effectors>
+		</phase>
+		<phase name="walk_fine_fast1_5">
+			<duration synPhase="walk_fine_fast1_3" const="1" />
+			<effectors>
+				<lle3 synPhase="walk_fine_fast1_2" synEffector="rle3" const="1" />
+				<lle4 synPhase="walk_fine_fast1_2" synEffector="rle4" const="1" />
+				<lle5 synPhase="walk_fine_fast1_2" synEffector="rle5" const="1" />
+				<rle3 synPhase="walk_fine_fast1_2" synEffector="lle3" const="1" />
+				<rle4 synPhase="walk_fine_fast1_2" synEffector="lle4" const="1" />
+				<rle5 synPhase="walk_fine_fast1_2" synEffector="lle5" const="1" />
+			</effectors>
+		</phase>
+	</phases>
+</config>

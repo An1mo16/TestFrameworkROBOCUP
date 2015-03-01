@@ -1,0 +1,219 @@
+<class-diagram version="0.9.86" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.AgentMoveWriter" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/AgentMoveWriter.java" 
+    binary="false">    
+    <position x="136" y="57" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.AgentMoveConfigReader" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/AgentMoveConfigReader.java" 
+    binary="false">    
+    <position x="604" y="85" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.AgentMoveTrainer" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/AgentMoveTrainer.java" 
+    binary="false">    
+    <position x="394" y="-59" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.AgentMoveReader" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/AgentMoveReader.java" 
+    binary="false">    
+    <position x="358" y="61" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.Range" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/Range.java" 
+    binary="false">    
+    <position x="494" y="615" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMoveEffector" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveEffector.java" 
+    binary="false">    
+    <position x="125" y="482" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigDuration" 
+    project="TestFramework" 
+    file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigDuration.java" binary="false">    
+    <position x="603" y="471" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigEffector" 
+    project="TestFramework" 
+    file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigEffector.java" binary="false">    
+    <position x="384" y="479" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.Calculated" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/Calculated.java" 
+    binary="false">    
+    <position x="384" y="351" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfiguration" 
+    project="TestFramework" 
+    file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfiguration.java" binary="false">    
+    <position x="603" y="180" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigPhase" 
+    project="TestFramework" 
+    file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigPhase.java" binary="false">    
+    <position x="603" y="327" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMove" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMove.java" 
+    binary="false">    
+    <position x="125" y="183" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class corner="BOTTOM_RIGHT" language="java" name="sk.fiit.testframework.agenttrainer.models.AgentMovePhase" 
+    project="TestFramework" file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMovePhase.java" 
+    binary="false">    
+    <position x="125" y="330" width="-1" height="-1"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigPhase" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigPhase.java" binary="false" 
+      navigable="false">      
+      <attribute name="duration"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigDuration" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigDuration.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigEffector" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigEffector.java" binary="false" 
+      navigable="false">      
+      <attribute name="value"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.Range" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/Range.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMove" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMove.java" binary="false" 
+      navigable="false">      
+      <attribute name="phases"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMovePhase" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMovePhase.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigPhase" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigPhase.java" binary="false" 
+      navigable="false">      
+      <attribute name="effectors"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigEffector" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigEffector.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigEffector" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigEffector.java" binary="false"/>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.Calculated" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/Calculated.java" binary="false"/>  
+  </generalization>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigDuration" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigDuration.java" binary="false" 
+      navigable="false">      
+      <attribute name="value"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.Range" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/Range.java" binary="false" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfiguration" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfiguration.java" binary="false" 
+      navigable="false">      
+      <attribute name="phases"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigPhase" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigPhase.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMovePhase" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMovePhase.java" binary="false" 
+      navigable="false">      
+      <attribute name="effectors"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </source>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveEffector" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveEffector.java" binary="false" 
+      navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization>    
+    <source project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.AgentMoveConfigDuration" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/AgentMoveConfigDuration.java" binary="false"/>    
+    <target project="TestFramework" name="sk.fiit.testframework.agenttrainer.models.Calculated" 
+      file="/TestFramework/src/sk/fiit/testframework/agenttrainer/models/Calculated.java" binary="false"/>  
+  </generalization>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
