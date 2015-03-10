@@ -24,7 +24,7 @@ public class DtWalkToBall implements Runnable, ITestCaseObserver {
 		
 		GP ga = new GP("dtWalk2Ball", 1000,50);
 		
-		while(ga.ConditionSatisfied()){
+		while(!ga.ConditionSatisfied()){
 			
 			ga.XmlToData();
 

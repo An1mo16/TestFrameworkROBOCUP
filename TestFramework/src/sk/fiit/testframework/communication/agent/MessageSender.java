@@ -8,15 +8,15 @@ import java.net.UnknownHostException;
 public class MessageSender{
 	Socket requestSocket;
     ObjectOutputStream out;
-
+    static int port = 3072;
     String message;
     MessageSender(){}
     public void run()
     {
         try{
             //1. creating a socket to connect to the server
-            requestSocket = new Socket("localhost", 3072);
-            System.out.println("Connected to localhost in port 3072");
+            requestSocket = new Socket("localhost", port);
+            System.out.println("Connected to localhost in port " + port);
             //2. get Input and Output streams
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();
