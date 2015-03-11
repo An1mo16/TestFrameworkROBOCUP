@@ -91,7 +91,7 @@ public class DtWalkToBallTest extends TestCase {
 			
 			server.setBallVelocity(new Point3D(0,0,0));
 			agent = AgentManager.getManager().getAgent(1,"ANDROIDS", true);
-			agent.setDtHghSkill("dtWalk2Ball", fileNameDt);
+			agent.setDtHghSkill("dtWalk2Ball", fileNameDt,"ANDROIDS1");
 			Thread.sleep(1000);
 			logger.info("Got agent");
 			if (agent != null) {

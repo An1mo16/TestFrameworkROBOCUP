@@ -98,14 +98,14 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 			agent2 = AgentManager.getManager().getAgent(1,"Team2", true);
 		
 			//TODO: zmenit logiku serveru aby kazdy hrac bol na inom porte a aby nerobili vzdy to iste
-			agent.setDtHghSkill("dtWalk2Ball", fileNameDt);
+			agent.setDtHghSkill("dtWalk2Ball", fileNameDt, "ANDROIDS1");
 			Thread.sleep(1000);
 			logger.info("Got agent");
 			
 			if (agent != null) {
 				agentData = agent.getAgentData();
 			} else {
-				agentData = new AgentData(1, TeamSide.RIGHT, "Team2");
+				agentData = new AgentData(1, TeamSide.LEFT, "ANDROIDS");
 			}
 			
 			if (agent2 != null) {

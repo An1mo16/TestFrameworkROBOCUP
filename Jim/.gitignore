@@ -1,0 +1,16 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+bin/*
+movecache
+*.log
+*.log1
+*.log2
+*.log3
+*.log.*
+
+release/*
+tests/*
+/bin

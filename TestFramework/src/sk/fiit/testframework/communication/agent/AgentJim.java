@@ -117,8 +117,9 @@ public class AgentJim {
     public void disconnectFromServer() {
         ms.close();
     }
-    public void setDtHghSkill(String highSkill, String dtXmlName) throws IOException {
+    public void setDtHghSkill(String highSkill, String dtXmlName, String player) throws IOException {
     	StringBuilder sb = new StringBuilder();
+    	sb.append("#player=" + player);
 		sb.append("-" + highSkill + "=" + dtXmlName);
 		sendCommand(sb.toString());
     }
