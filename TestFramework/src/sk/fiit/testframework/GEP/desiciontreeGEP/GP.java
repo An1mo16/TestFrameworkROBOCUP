@@ -52,6 +52,8 @@ public class GP {
 		agentVariables.put("r", 101);
 		agentVariables.put("x", 102);
 		agentVariables.put("y", 103);
+		agentVariables.put("xr", 104);
+		agentVariables.put("yr", 105);
 				
 		desicions.put("lowerThen", 110);
 		desicions.put("biggerThen", 111);
@@ -354,7 +356,7 @@ public class GP {
 		try {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new FileOutputStream("C:/Users/Julius/Documents/workspace/Jim/dtHighskills/" + file + ".xml", false));
+			StreamResult result = new StreamResult(new FileOutputStream(System.getProperty("user.dir") + "/dtHighskills/" + file + ".xml", false));
 			transformer.transform(source, result);
 		} catch (TransformerException | FileNotFoundException e) {
 			e.printStackTrace();
@@ -694,6 +696,13 @@ public class GP {
 		for(int i = 1; i <= populationLength; i++){
 			Population.add(pathOfDt + i);
 			PopulationData.add(XmlToData(Population.get(i-1)));
+		}
+	}
+
+
+	public void ReplaceXmlInData() {
+		for(int i = 0; i < populationLength; i++){
+			PopulationData.set(i, XmlToData(Population.get(i)));
 		}
 	}
 }

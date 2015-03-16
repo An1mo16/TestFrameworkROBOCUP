@@ -10,6 +10,7 @@ import sk.fiit.robocup.library.geometry.Angles;
 import sk.fiit.robocup.library.geometry.Point3D;
 import sk.fiit.robocup.library.geometry.Vector3;
 import sk.fiit.robocup.library.geometry.Vector3D;
+import sk.fiit.testframework.GEP.desiciontreeGEP.AgentSimulation;
 import sk.fiit.testframework.communication.agent.AgentData;
 import sk.fiit.testframework.communication.agent.AgentJim;
 import sk.fiit.testframework.communication.agent.AgentJim.TeamSide;
@@ -47,13 +48,10 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 	private double TIME_BETWEEN_KICK_AND_TELEPORT = 1;
 	private boolean agentTeleportedAfterKick = false;
 	
-//	private Vector3 initPosBall = new Vector3(0.2,0,0.2);
-//	private Vector3 initPosAgent = new Vector3(0,0,0.4);
 	private Vector3 initPosBall = new Vector3(10.0,0,0.2);
 	private Vector3 PosBall2 = new Vector3(0,5.0,0.2);
 	private double fitness1 = 0;
 	private Vector3 initPosAgent = new Vector3(0,0,0.4);
-	private Vector3 initPosAgent2 = new Vector3(5.0,0,0.4);
 	boolean secondRound = false;
 	boolean endFlag = false;
 	
@@ -70,8 +68,10 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 	private boolean playerFalled = false;
 	private boolean timeExpired = false;
 	
+	private AgentSimulation agentSim;
+	private double  distanceBorder = 1;
 	public String fileNameDt = null;
-	 
+	private double closestToOtherPlayer = 100;
 	public DtWalkToBallBypassObstaclesTest(String fileName) {
 		super();
 		fileNameDt = fileName;
@@ -92,12 +92,9 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 			
 			server.setBallVelocity(new Point3D(0,0,0));
 			
-			
 			agent = AgentManager.getManager().getAgent(1,"ANDROIDS", true);
+			agentSim = new AgentSimulation(true, new Vector3(5.0,0,0),agent);
 			
-			agent2 = AgentManager.getManager().getAgent(1,"Team2", true);
-		
-			//TODO: zmenit logiku serveru aby kazdy hrac bol na inom porte a aby nerobili vzdy to iste
 			agent.setDtHghSkill("dtWalk2Ball", fileNameDt, "ANDROIDS1");
 			Thread.sleep(1000);
 			logger.info("Got agent");
@@ -108,14 +105,7 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 				agentData = new AgentData(1, TeamSide.LEFT, "ANDROIDS");
 			}
 			
-			if (agent2 != null) {
-				agentData2 = agent2.getAgentData();
-			} else {
-				agentData2 = new AgentData(1, TeamSide.RIGHT, "Team2");
-			}
-			
 			server.setAgentPosition(agentData, initPosAgent.asPoint3D());
-			server.setAgentPosition(agentData2, initPosAgent2.asPoint3D());
 			
 			server.setPlayMode(PlayMode.PlayOn);
 			
@@ -140,7 +130,8 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 					logger.info("Test measurement started");
 					started = true;
 					server.setBallPosition(initPosBall.asPoint3D());
-					
+					closestToOtherPlayer = 100;
+					agentSim.run();
 				   server.setBallVelocity(new Point3D(0,0,0));
 					
 					startTime = getElapsedTime();
@@ -152,7 +143,7 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 		} else {
 			p = ss.getScene().getPlayers().get(0);
 			double elapsedTime = getElapsedTime();
-			
+			closestToOtherPlayer = Math.min(closestToOtherPlayer, p.getLocation().getXYDistanceFrom(agentSim.getPosition())); 
 		
 			if(elapsedTime - startTime > 20)
 				//return true;
@@ -176,8 +167,11 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 					startTime = getElapsedTime();
 					Thread.sleep(1000);
 					server.setBallVelocity(new Point3D(0,0,0));
-					server.setBallPosition(initPosBall.asPoint3D());
-					fitness1 = computeFitness(ss);
+					server.setBallPosition(PosBall2.asPoint3D());
+					agentSim = new AgentSimulation(true, new Vector3(0,2.5,0),agent);
+					fitness1 = computeFitness(ss,Vector3D.fromVector3(initPosAgent),
+							Vector3D.fromVector3(ss.getScene().getPlayers().get(0).getLocation()),
+							Vector3D.fromVector3(initPosBall));
 					server.setAgentPosition(agentData, initPosAgent.asPoint3D());
 					server.setPlayMode(PlayMode.PlayOn);
 				//	Thread.sleep(1000);
@@ -217,14 +211,17 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 	}
 
 	@Override
-	public TestCaseResult evaluate(SimulationState ss) {
+public TestCaseResult evaluate(SimulationState ss) {
 		
 		
 		Player p = ss.getScene().getPlayers().get(0);
 		Vector3 agentFinalLocation = ss.getScene().getPlayers().get(0).getLocation();
 		
 		double result = computeFitness(
-					ss);
+					ss,
+					Vector3D.fromVector3(initPosAgent),
+					Vector3D.fromVector3(agentFinalLocation),
+					Vector3D.fromVector3(PosBall2));
 		
 		return new TestCaseResult(result);
 	}
@@ -243,9 +240,18 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 		logger.fine("Test case destroyed");
 	}	
 	
-	private double computeFitness(SimulationState ss){
+	private double computeFitness(SimulationState ss,
+			Vector3D startPos, Vector3D endPos, Vector3D initBall){
 		
-		return 0;
+		double time = startTime - ss.getGameStateInfo().getTime();
+		double ret = startPos.getXYDistanceFrom(initBall) - endPos.getXYDistanceFrom(initBall); 
+		if(closestToOtherPlayer < distanceBorder){
+			ret = ret / 10;
+		}
+		if(ret < 0)
+			return fitness1;
+		else
+			return fitness1 + Math.pow(ret+1,3) - 1;
 		
 	}
 }

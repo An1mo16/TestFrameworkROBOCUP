@@ -11,6 +11,7 @@ import org.apache.commons.net.tftp.TFTPClient;
 import sk.fiit.jim.agent.models.WorldModel;
 import sk.fiit.robocup.library.annotations.TestCovered;
 import sk.fiit.robocup.library.annotations.UnderConstruction;
+import sk.fiit.robocup.library.geometry.Vector3;
 import sk.fiit.robocup.library.init.Script;
 
 /**
@@ -120,6 +121,7 @@ public class AgentJim {
     public void setDtHghSkill(String highSkill, String dtXmlName, String player) throws IOException {
     	StringBuilder sb = new StringBuilder();
     	sb.append("#player=" + player);
+    	sb.append("\n");
 		sb.append("-" + highSkill + "=" + dtXmlName);
 		sendCommand(sb.toString());
     }
@@ -181,5 +183,17 @@ public class AgentJim {
 	
 	public WorldModel getWorldModel() {
 		return worldModel;
+	}
+
+	public void setCoordinates(Vector3 actPos) {
+		StringBuilder sb = new StringBuilder();
+    	sb.append("$xr=" + actPos.getX() + ";yr=" + actPos.getY());
+		try {
+			sendCommand(sb.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
