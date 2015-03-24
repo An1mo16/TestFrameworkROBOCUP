@@ -13,7 +13,7 @@ public class XmlLoader {
 
 				DocumentBuilder db = dbf.newDocumentBuilder();
 				
-				Document dom = db.parse("C:/Users/Julius/Documents/workspace/Jim/dtHighskills/" + file);
+				Document dom = db.parse("C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/" + file);
 
 				return dom;
 				

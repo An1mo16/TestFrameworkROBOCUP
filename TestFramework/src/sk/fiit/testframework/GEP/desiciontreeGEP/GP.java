@@ -1,10 +1,17 @@
 package sk.fiit.testframework.GEP.desiciontreeGEP;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +54,7 @@ public class GP {
 	private Map<String, Integer> lowSkills = new HashMap<String, Integer>();
 	
 	private String pathOfDt;
-	
+	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	public GP(String path, double goalF, int popLength){
 		agentVariables.put("r", 101);
 		agentVariables.put("x", 102);
@@ -76,17 +83,18 @@ public class GP {
 		parameters.put("x2", 3);
 		parameters.put("y1", 4);
 		parameters.put("y2", 5);
+		parameters.put("r1", 6);
 		
-		angles.put("straightRange1", 6);
-		angles.put("straightRange2", 7);
-		angles.put("rightRange", 8);
-		angles.put("rightRange2", 9);
-		angles.put("rightRange3", 10);
-		angles.put("leftRange", 11);
-		angles.put("leftRange2", 12);
-		angles.put("leftRange3", 13);
+		angles.put("straightRange1", 7);
+		angles.put("straightRange2", 8);
+		angles.put("rightRange", 9);
+		angles.put("rightRange2", 10);
+		angles.put("rightRange3", 11);
+		angles.put("leftRange", 12);
+		angles.put("leftRange2", 13);
+		angles.put("leftRange3", 14);
 
-	//	lowSkills.put("null", 49);
+		lowSkills.put("null", 49);
 	//	lowSkills.put("step_circ_left_small", 50);
 	//	lowSkills.put("step_circ_left", 51);
 	//	lowSkills.put("step_circ_right_small", 52);
@@ -110,7 +118,7 @@ public class GP {
 		lowSkills.put("head_left_120", 70);
 		lowSkills.put("turn_right_cont_20", 71);
 		lowSkills.put("turn_left_cont_20", 72);
-		//lowSkills.put("rollback", 73);
+		lowSkills.put("rollback", 73);
 		/*lowSkills.put("turn_right_cont_10", 68);
 		lowSkills.put("turn_right_cont_20", 69);
 		lowSkills.put("turn_right_cont_4.5", 70);
@@ -168,7 +176,7 @@ public class GP {
 				child = child.getNextSibling();
 				continue;
 			}
-			if(sibling && result.get(result.size() -1) != -52) result.add(-51.0);
+			if(sibling && result.size() > 0 && result.get(result.size() -1) != -52) result.add(-51.0);
 			if(child.getNodeName().equals("desicion")){
 				
 				
@@ -196,14 +204,17 @@ public class GP {
 					}
 				}
 				else if(!(function = GetAttr(child, "function")).equals("")){
-					result.add( (double)functions.get(function));
+					
 					String[] params = GetAttr(child, "params").split(",");
-					int i = 0;
-					for(i = 0; i < params.length; i++){
-						result.add((double)angles.get(params[i]));
-					}
-					if(i == 1){
-						result.add(0.0);
+					if(!params[0].isEmpty()){
+						result.add( (double)functions.get(function));
+						int i = 0;
+						for(i = 0; i < params.length; i++){
+							result.add((double)angles.get(params[i]));
+						}
+						if(i == 1){
+							result.add(0.0);
+						}
 					}
 				}
 					
@@ -272,9 +283,7 @@ public class GP {
 				String param = "";
 				if(!constant)param = GetKeyByValue(parameters, parameter);
 				else param = String.valueOf(parameter);
-				if(param.equals(""))
-					 param="";
-					
+				
 				if(GetKeyByValue(lowSkills, list.get(j + 3)) != null && list.get(j + 3) != (double)treeDepth.get("lowerLevel") ){
 					offset++;
 					lowSkillAdded = true;
@@ -356,7 +365,7 @@ public class GP {
 		try {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new FileOutputStream(System.getProperty("user.dir") + "/dtHighskills/" + file + ".xml", false));
+			StreamResult result = new StreamResult(new FileOutputStream("/C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/" + file + ".xml", false));
 			transformer.transform(source, result);
 		} catch (TransformerException | FileNotFoundException e) {
 			e.printStackTrace();
@@ -440,9 +449,9 @@ public class GP {
 	}
 	
 	private List<Double> mutate(List<Double> list){
-		double mutationRate = 0.05;
-		double insertConditionRate = 0.55;
-		double deleteConditionRate = 0.45;
+		double mutationRate = 0.04;
+		double insertConditionRate = 0.50;
+		double deleteConditionRate = 0.50;
 		double maxChangeValue = 0.1;
 		int maxSizeList = 150;
 		int n = 0;
@@ -453,7 +462,7 @@ public class GP {
 		while(list.get(i) != 16 || isEmpty){
 			c = classify(list.get(i));
 			if(c != null && (c.equals(treeDepth) || c.equals(functions))){
-				mutationRate =  0.10;//(100 - list.size()) * 0.05 + mutationRate ;
+				mutationRate =  0.1;//(100 - list.size()) * 0.05 + mutationRate ;
 			}
 			else{
 				mutationRate = 0.05;
@@ -595,7 +604,7 @@ public class GP {
 	
 	private Map<String,Integer> classify(double x){
 		if(x < 30){
-			if(x < 6){
+			if(x < 7){
 				if(x < -5){
 					return treeDepth;
 				}
@@ -645,6 +654,17 @@ public class GP {
 				maxFitnessFile = Population.get(i);
 			}
 		}
+		PrintWriter out;
+		try {
+			out =  new PrintWriter(new BufferedWriter(new FileWriter("bestFiles.txt", true)));
+		
+		out.println("bestfile:" + maxFitnessFile + ", fitness:" + maxFitness + ", " + dateFormat.format(new Date()) );
+		out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
 	}
 	
 	public boolean ConditionSatisfied(){
