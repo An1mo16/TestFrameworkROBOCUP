@@ -1,11 +1,16 @@
 package sk.fiit.testframework.GEP.desiciontreeGEP;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +48,9 @@ public class GP {
 	private double maxFitness;
 	private double goalFitness;
 	private String maxFitnessFile;
-	private Random rand = new Random(System.currentTimeMillis() );
+	private Random rand;
+	private int LOG_FITNESS = 1000;
+	private String PATH ="/C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/";
 	
 	private Map<String, Integer> agentVariables = new HashMap<String, Integer>();
 	private Map<String, Integer> desicions = new HashMap<String, Integer>();
@@ -55,6 +62,7 @@ public class GP {
 	
 	private String pathOfDt;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	private DateFormat dateFormatFile = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 	public GP(String path, double goalF, int popLength){
 		agentVariables.put("r", 101);
 		agentVariables.put("x", 102);
@@ -94,7 +102,7 @@ public class GP {
 		angles.put("leftRange2", 13);
 		angles.put("leftRange3", 14);
 
-		lowSkills.put("null", 49);
+		lowSkills.put("null", 53);
 	//	lowSkills.put("step_circ_left_small", 50);
 	//	lowSkills.put("step_circ_left", 51);
 	//	lowSkills.put("step_circ_right_small", 52);
@@ -365,7 +373,7 @@ public class GP {
 		try {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new FileOutputStream("/C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/" + file + ".xml", false));
+			StreamResult result = new StreamResult(new FileOutputStream(PATH + file + ".xml", false));
 			transformer.transform(source, result);
 		} catch (TransformerException | FileNotFoundException e) {
 			e.printStackTrace();
@@ -449,9 +457,9 @@ public class GP {
 	}
 	
 	private List<Double> mutate(List<Double> list){
-		double mutationRate = 0.04;
+		double mutationRate = 0.02;
 		double insertConditionRate = 0.50;
-		double deleteConditionRate = 0.50;
+		double deleteConditionRate = 0.60;
 		double maxChangeValue = 0.1;
 		int maxSizeList = 150;
 		int n = 0;
@@ -462,10 +470,10 @@ public class GP {
 		while(list.get(i) != 16 || isEmpty){
 			c = classify(list.get(i));
 			if(c != null && (c.equals(treeDepth) || c.equals(functions))){
-				mutationRate =  0.1;//(100 - list.size()) * 0.05 + mutationRate ;
+				mutationRate =  0.04;//(100 - list.size()) * 0.05 + mutationRate ;
 			}
 			else{
-				mutationRate = 0.05;
+				mutationRate = 0.02;
 			}
 			//System.out.println(i + ":" + list.get(i));
 			 n = rand.nextInt(100) + 1;
@@ -652,6 +660,13 @@ public class GP {
 			if (maxFitness < testResults.get(i).getFitness()){
 				maxFitness = testResults.get(i).getFitness();
 				maxFitnessFile = Population.get(i);
+				if(testResults.get(i).getFitness() > LOG_FITNESS){
+					try {
+						Files.copy( new File(PATH + Population.get(i) + ".xml").toPath(), new File(PATH + "over1000/" + Population.get(i) + dateFormatFile.format(new Date()) + ".xml").toPath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		PrintWriter out;
@@ -661,7 +676,6 @@ public class GP {
 		out.println("bestfile:" + maxFitnessFile + ", fitness:" + maxFitness + ", " + dateFormat.format(new Date()) );
 		out.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 			
@@ -721,6 +735,7 @@ public class GP {
 
 
 	public void ReplaceXmlInData() {
+		rand = new Random(System.currentTimeMillis() );
 		for(int i = 0; i < populationLength; i++){
 			PopulationData.set(i, XmlToData(Population.get(i)));
 		}

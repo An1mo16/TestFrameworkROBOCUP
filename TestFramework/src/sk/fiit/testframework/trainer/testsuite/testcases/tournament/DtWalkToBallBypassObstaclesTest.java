@@ -245,8 +245,16 @@ public TestCaseResult evaluate(SimulationState ss) {
 		
 		double time = startTime - ss.getGameStateInfo().getTime();
 		double ret = startPos.getXYDistanceFrom(initBall) - endPos.getXYDistanceFrom(initBall); 
-		if(closestToOtherPlayer < distanceBorder){
+		if(ret < startPos.getXYDistanceFrom(initBall)/2)
 			ret = ret / 10;
+		if(closestToOtherPlayer < distanceBorder){
+			if(closestToOtherPlayer < 0.5)
+				ret = ret*0.5;
+			else
+				ret = ret *  closestToOtherPlayer;
+			/*if(closestToOtherPlayer < 0.3){
+				ret = ret / 10;
+			}*/
 		}
 		if(ret < 0)
 			return fitness1;
