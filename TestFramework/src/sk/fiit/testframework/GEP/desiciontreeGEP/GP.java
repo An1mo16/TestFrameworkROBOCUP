@@ -678,7 +678,7 @@ public class GP {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-			
+		maxFitness = 0;
 	}
 	
 	public boolean ConditionSatisfied(){

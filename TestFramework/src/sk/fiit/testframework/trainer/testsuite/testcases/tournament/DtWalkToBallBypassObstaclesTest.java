@@ -67,6 +67,7 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 	private boolean ballMoved = false;
 	private boolean playerFalled = false;
 	private boolean timeExpired = false;
+	private boolean outOfPath = false;
 	
 	private AgentSimulation agentSim;
 	private double  distanceBorder = 1;
@@ -145,6 +146,10 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 			double elapsedTime = getElapsedTime();
 			closestToOtherPlayer = Math.min(closestToOtherPlayer, p.getLocation().getXYDistanceFrom(agentSim.getPosition())); 
 		
+			if(!outOfPath){
+				outOfPath = calculateOutOfPath(p.getLocation());
+			}
+			
 			if(elapsedTime - startTime > 20)
 				//return true;
 				if(!secondRound)
@@ -162,6 +167,7 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 			if(endFlag == true){
 				try {
 					secondRound = true;
+					outOfPath = false;
 					endFlag = false;
 					server.setPlayMode(PlayMode.BeforeKickOff);
 					startTime = getElapsedTime();
@@ -190,6 +196,33 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 		}
 	}
 	
+	private boolean calculateOutOfPath(Vector3 p) {
+		double x = p.getX();
+		double y = p.getY();
+		if(secondRound){
+			double pom = x;
+			x = y*2;
+			y = pom;
+		}
+		if(x > 0 
+		&& x > 4 * y - 1 
+		&& x > -4 * y - 1
+		&& 3*x < -10 * y + 30
+		&& 3*x < 10 * y - 30)
+			return false;
+		else 
+			return true;
+	/*	if(secondRound){
+			if(y > 0 
+					&& 2*y > 4 * x - 1 
+					&& 2*y > -4 * x - 1
+					&& 6*y < -10 * x + 30
+					&& 6*y < 10 * x - 30)
+						return false;
+		}*/
+	}
+
+
 	/**
 	 * Checks if player is out of the field.
 	 * 
@@ -243,7 +276,6 @@ public TestCaseResult evaluate(SimulationState ss) {
 	private double computeFitness(SimulationState ss,
 			Vector3D startPos, Vector3D endPos, Vector3D initBall){
 		
-		double time = startTime - ss.getGameStateInfo().getTime();
 		double ret = startPos.getXYDistanceFrom(initBall) - endPos.getXYDistanceFrom(initBall); 
 		if(ret < startPos.getXYDistanceFrom(initBall)/2)
 			ret = ret / 10;
@@ -252,10 +284,9 @@ public TestCaseResult evaluate(SimulationState ss) {
 				ret = ret*0.5;
 			else
 				ret = ret *  closestToOtherPlayer;
-			/*if(closestToOtherPlayer < 0.3){
-				ret = ret / 10;
-			}*/
 		}
+		if(outOfPath)
+			ret = ret * 0.75;
 		if(ret < 0)
 			return fitness1;
 		else
