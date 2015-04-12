@@ -25,7 +25,7 @@ public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver 
 	public void run() {
 		
 		
-		GP ga = new GP("dtWalk2Ball", 5000,50);
+		GP ga = new GP("dtWalk2Ball", 10000,50);
 		while(!ga.ConditionSatisfied()){
 			
 			ga.ReplaceXmlInData();

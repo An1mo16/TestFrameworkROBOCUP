@@ -49,7 +49,7 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 	private boolean agentTeleportedAfterKick = false;
 	
 	private Vector3 initPosBall = new Vector3(10.0,0,0.2);
-	private Vector3 PosBall2 = new Vector3(0,5.0,0.2);
+	private Vector3 PosBall2 = new Vector3(10.0,10.0,0.2);
 	private double fitness1 = 0;
 	private Vector3 initPosAgent = new Vector3(0,0,0.4);
 	boolean secondRound = false;
@@ -150,7 +150,7 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 				outOfPath = calculateOutOfPath(p.getLocation());
 			}
 			
-			if(elapsedTime - startTime > 20)
+			if(elapsedTime - startTime > 30)
 				//return true;
 				if(!secondRound)
 					endFlag = true;
@@ -174,10 +174,10 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 					Thread.sleep(1000);
 					server.setBallVelocity(new Point3D(0,0,0));
 					server.setBallPosition(PosBall2.asPoint3D());
-					agentSim = new AgentSimulation(true, new Vector3(0,2.5,0),agent);
+					//agentSim = new AgentSimulation(true, new Vector3(0,2.5,0),agent);
 					fitness1 = computeFitness(ss,Vector3D.fromVector3(initPosAgent),
 							Vector3D.fromVector3(ss.getScene().getPlayers().get(0).getLocation()),
-							Vector3D.fromVector3(initPosBall));
+							Vector3D.fromVector3(initPosBall),true);
 					server.setAgentPosition(agentData, initPosAgent.asPoint3D());
 					server.setPlayMode(PlayMode.PlayOn);
 				//	Thread.sleep(1000);
@@ -254,7 +254,7 @@ public TestCaseResult evaluate(SimulationState ss) {
 					ss,
 					Vector3D.fromVector3(initPosAgent),
 					Vector3D.fromVector3(agentFinalLocation),
-					Vector3D.fromVector3(PosBall2));
+					Vector3D.fromVector3(PosBall2),false);
 		
 		return new TestCaseResult(result);
 	}
@@ -274,7 +274,7 @@ public TestCaseResult evaluate(SimulationState ss) {
 	}	
 	
 	private double computeFitness(SimulationState ss,
-			Vector3D startPos, Vector3D endPos, Vector3D initBall){
+			Vector3D startPos, Vector3D endPos, Vector3D initBall, boolean isSecondRound){
 		
 		double ret = startPos.getXYDistanceFrom(initBall) - endPos.getXYDistanceFrom(initBall); 
 		if(ret < startPos.getXYDistanceFrom(initBall)/2)
@@ -285,7 +285,7 @@ public TestCaseResult evaluate(SimulationState ss) {
 			else
 				ret = ret *  closestToOtherPlayer;
 		}
-		if(outOfPath)
+		if(outOfPath && !isSecondRound)
 			ret = ret * 0.75;
 		if(ret < 0)
 			return fitness1;

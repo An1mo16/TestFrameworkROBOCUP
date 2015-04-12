@@ -457,9 +457,9 @@ public class GP {
 	}
 	
 	private List<Double> mutate(List<Double> list){
-		double mutationRate = 0.02;
-		double insertConditionRate = 0.50;
-		double deleteConditionRate = 0.60;
+		double mutationRate = 0.03;
+		double insertConditionRate = 0.45;
+		double deleteConditionRate = 0.70;
 		double maxChangeValue = 0.1;
 		int maxSizeList = 150;
 		int n = 0;
@@ -473,7 +473,7 @@ public class GP {
 				mutationRate =  0.04;//(100 - list.size()) * 0.05 + mutationRate ;
 			}
 			else{
-				mutationRate = 0.02;
+				mutationRate = 0.03;
 			}
 			//System.out.println(i + ":" + list.get(i));
 			 n = rand.nextInt(100) + 1;
