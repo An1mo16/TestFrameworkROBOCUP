@@ -20,12 +20,13 @@ import sk.fiit.testframework.trainer.testsuite.TestCaseResult;
 public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver {
 	private static Logger logger = Logger.getLogger(DtWalkToBall.class.getName());
 	private List<TestCaseResult> testResults;
-	Implementation impl = ImplementationFactory.getImplementationInstance();
+	
 	@Override
 	public void run() {
 		
+		Implementation impl = ImplementationFactory.getImplementationInstance();
 		
-		GP ga = new GP("dtWalk2Ball", 10000,50);
+		GP ga = new GP("dtWalk2Ball", 1500,50);
 		while(!ga.ConditionSatisfied()){
 			
 			ga.ReplaceXmlInData();
@@ -41,7 +42,11 @@ public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver 
 			for(int i = 0; i < ga.populationLength; i++){
 				ga.DataToXml(i);
 				impl.enqueueTestCase(new DtWalkToBallBypassObstaclesTest(ga.Population.get(i)), this);	 // tu sa vytvori parameter kde sa vlozi nazov xml suboru kde je rozhodovaci strom
+				
+				
 			}
+			for(int i = 0; i < ga.populationLength; i++){
+				}
 			while(testResults.size() != ga.populationLength){
 				try {
 					Thread.sleep(1000);

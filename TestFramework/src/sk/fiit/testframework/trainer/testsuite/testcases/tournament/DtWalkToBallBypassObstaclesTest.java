@@ -31,42 +31,26 @@ import sk.fiit.testframework.worldrepresentation.models.SimulationState;
  *
  */
 public class DtWalkToBallBypassObstaclesTest extends TestCase {
-	//how much time between start of playmode and start of testing - if ball started to move (ball kicked)
-	//because ball moves a bit after set to initial point
-	private static double TIME_FOR_INITIAL_BALL_MOVE = 2.5;
-	//minimal ball move set by rules
-	private static double MIN_BALL_DIST = 1.5;
-	//value for failed kick
-	private static double FAILED = 360;
-	//time for kick
-	private int TIME = 300;
-	
+	private static double TIME_FOR_INITIAL_BALL_MOVE = 1;
 	private double fieldLength;
 	private double fieldWidth;
 	
-	private double ballTouchedTime = -1;
-	private double TIME_BETWEEN_KICK_AND_TELEPORT = 1;
-	private boolean agentTeleportedAfterKick = false;
-	
 	private Vector3 initPosBall = new Vector3(10.0,0,0.2);
-	private Vector3 PosBall2 = new Vector3(10.0,10.0,0.2);
-	private double fitness1 = 0;
+	private Vector3 PosBall2 = new Vector3(0.0,5.0,0.2);
+	private double fitness1 = 1;
 	private Vector3 initPosAgent = new Vector3(0,0,0.4);
+	private double caseTime = 30;
 	boolean secondRound = false;
 	boolean endFlag = false;
 	
 	private static Logger logger = Logger.getLogger(KickDistanceTest.class.getName());
 
 	private AgentData agentData;
-	private AgentData agentData2;
 	private AgentJim agent;
-	private AgentJim agent2;
 	private boolean started = false;
 	private double startTime;
 	
 	private boolean ballMoved = false;
-	private boolean playerFalled = false;
-	private boolean timeExpired = false;
 	private boolean outOfPath = false;
 	
 	private AgentSimulation agentSim;
@@ -94,9 +78,11 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 			server.setBallVelocity(new Point3D(0,0,0));
 			
 			agent = AgentManager.getManager().getAgent(1,"ANDROIDS", true);
-			agentSim = new AgentSimulation(true, new Vector3(5.0,0,0),agent);
-			
 			agent.setDtHghSkill("dtWalk2Ball", fileNameDt, "ANDROIDS1");
+			
+			agentSim = new AgentSimulation(false, new Vector3(2.0,0,0),agent,new Vector3(10.0,2.0,0), caseTime, 2);
+			
+			
 			Thread.sleep(1000);
 			logger.info("Got agent");
 			
@@ -132,7 +118,6 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 					started = true;
 					server.setBallPosition(initPosBall.asPoint3D());
 					closestToOtherPlayer = 100;
-					agentSim.run();
 				   server.setBallVelocity(new Point3D(0,0,0));
 					
 					startTime = getElapsedTime();
@@ -144,50 +129,47 @@ public class DtWalkToBallBypassObstaclesTest extends TestCase {
 		} else {
 			p = ss.getScene().getPlayers().get(0);
 			double elapsedTime = getElapsedTime();
-			closestToOtherPlayer = Math.min(closestToOtherPlayer, p.getLocation().getXYDistanceFrom(agentSim.getPosition())); 
-		
+			closestToOtherPlayer = Math.min(closestToOtherPlayer, p.getLocation().getXYDistanceFrom(agentSim.getPosition(elapsedTime - startTime))); 
 			if(!outOfPath){
 				outOfPath = calculateOutOfPath(p.getLocation());
 			}
 			
-			if(elapsedTime - startTime > 30)
-				//return true;
+			if(elapsedTime - startTime > caseTime)
 				if(!secondRound)
 					endFlag = true;
 				else return true;
 			
 			//zaznamena, ci sa lopta uz hybala
 			if(!ballMoved && ss.getScene().isBallMoving() && (elapsedTime - startTime > TIME_FOR_INITIAL_BALL_MOVE)){
-				//return true;
+				ballMoved = true;
 				if(!secondRound)
 					endFlag = true;
 				else return true;
 			}
 			
-			if(endFlag == true){
+			if(endFlag){
 				try {
 					secondRound = true;
 					outOfPath = false;
 					endFlag = false;
+					ballMoved = false;
 					server.setPlayMode(PlayMode.BeforeKickOff);
 					startTime = getElapsedTime();
-					Thread.sleep(1000);
 					server.setBallVelocity(new Point3D(0,0,0));
 					server.setBallPosition(PosBall2.asPoint3D());
-					//agentSim = new AgentSimulation(true, new Vector3(0,2.5,0),agent);
+					agentSim = new AgentSimulation(false, new Vector3(2.0,0,0),agent,new Vector3(10.0,2.0,0), caseTime, 2);
 					fitness1 = computeFitness(ss,Vector3D.fromVector3(initPosAgent),
 							Vector3D.fromVector3(ss.getScene().getPlayers().get(0).getLocation()),
 							Vector3D.fromVector3(initPosBall),true);
 					server.setAgentPosition(agentData, initPosAgent.asPoint3D());
+					logger.info("Hráè nastavený do ïalšej fázy");
 					server.setPlayMode(PlayMode.PlayOn);
-				//	Thread.sleep(1000);
 					
-				} catch (IOException | InterruptedException e) {
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-				
 			//inak sa pokracuje
 			return false;
 			
@@ -285,12 +267,13 @@ public TestCaseResult evaluate(SimulationState ss) {
 			else
 				ret = ret *  closestToOtherPlayer;
 		}
-		if(outOfPath && !isSecondRound)
-			ret = ret * 0.75;
+		if(outOfPath)
+			ret = ret * 0.65;
 		if(ret < 0)
 			return fitness1;
-		else
+		else{
 			return fitness1 + Math.pow(ret+1,3) - 1;
-		
+			
+		}
 	}
 }

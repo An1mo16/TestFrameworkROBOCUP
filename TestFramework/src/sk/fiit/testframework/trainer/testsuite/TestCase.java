@@ -73,7 +73,7 @@ public abstract class TestCase implements Callable<TestCaseResult>, ISimulationS
 
                 if (isStopCriterionMet(simulationState)) {
                 	TestCaseResult result = evaluate(simulationState);
-                	logger.fine(this.getClass().getName() + ": Destroy test case with result: " + result);
+                	logger.info(this.getClass().getName() + ": Destroy test case with result: " + result);
                 	destroy();
                     return result;
                 }

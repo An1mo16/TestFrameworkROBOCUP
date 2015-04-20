@@ -49,8 +49,15 @@ public class GP {
 	private double goalFitness;
 	private String maxFitnessFile;
 	private Random rand;
-	private int LOG_FITNESS = 1000;
+	private int LOG_FITNESS = 5000;
 	private String PATH ="/C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/";
+	
+	double mutationRate = 0.03;
+	double insertConditionRate = 0.45;
+	double deleteConditionRate = 0.30;
+	int maxSizeList = 150;
+	int n = 0;
+	int random = 0;
 	
 	private Map<String, Integer> agentVariables = new HashMap<String, Integer>();
 	private Map<String, Integer> desicions = new HashMap<String, Integer>();
@@ -60,6 +67,7 @@ public class GP {
 	private Map<String, Integer> treeDepth = new HashMap<String, Integer>();
 	private Map<String, Integer> lowSkills = new HashMap<String, Integer>();
 	
+	private double TreeParameterSeparator = 16.0;
 	private String pathOfDt;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private DateFormat dateFormatFile = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
@@ -154,10 +162,10 @@ public class GP {
 		Node desicionTree = desicion.item(0);
 		if(desicionTree.getNodeType() == Node.ELEMENT_NODE && HasChildElements((Element)desicionTree)){
 			if(desicionTree.getFirstChild() != null)
-				result.add(-51.0);
+				result.add((double)treeDepth.get("sameLevel"));
 			result.addAll(getDataFromTree(desicionTree.getFirstChild()));
 		}
-		result.add(16.0); // separator
+		result.add(TreeParameterSeparator); // separator
 		
 		NodeList para = doc.getElementsByTagName("parameters");
 		Node parameters = para.item(0).getFirstChild();
@@ -184,7 +192,7 @@ public class GP {
 				child = child.getNextSibling();
 				continue;
 			}
-			if(sibling && result.size() > 0 && result.get(result.size() -1) != -52) result.add(-51.0);
+			if(sibling && result.size() > 0 && result.get(result.size() -1) != (double)treeDepth.get("higherLevel")) result.add((double)treeDepth.get("sameLevel"));
 			if(child.getNodeName().equals("desicion")){
 				
 				
@@ -233,9 +241,9 @@ public class GP {
 
 				}
 				else{
-					result.add(-50.0); //dalsia uroven
+					result.add((double)treeDepth.get("lowerLevel")); //dalsia uroven
 					result.addAll(getDataFromTree(child.getFirstChild()));
-					result.add(-52.0); //vyssia uroven
+					result.add((double)treeDepth.get("higherLevel")); //vyssia uroven
 				}
 			}
 			child = child.getNextSibling();
@@ -266,7 +274,7 @@ public class GP {
 		int j = 0;
 		Element actElement = (Element)desicionT;
 		int offset = 0;
-		while(list.get(j) != 16){
+		while(list.get(j) != TreeParameterSeparator){
 			boolean lowSkillAdded = false;
 			Element addedElement = null;
 			if(actElement == null)
@@ -289,7 +297,9 @@ public class GP {
 				String condition = GetKeyByValue(desicions, list.get(j+1));
 				
 				String param = "";
-				if(!constant)param = GetKeyByValue(parameters, parameter);
+				if(!constant){
+					param = GetKeyByValue(parameters, parameter);
+				}
 				else param = String.valueOf(parameter);
 				
 				if(GetKeyByValue(lowSkills, list.get(j + 3)) != null && list.get(j + 3) != (double)treeDepth.get("lowerLevel") ){
@@ -332,13 +342,13 @@ public class GP {
 					addedElement = AddFunctionElement(doc, actElement, func, param1, null, lowSkill);
 				j += offset;
 			}
-			if(list.get(j) == -50 && !lowSkillAdded){
+			if(list.get(j) == (double)treeDepth.get("lowerLevel") && !lowSkillAdded){
 				if(addedElement != null)
 				actElement = addedElement;
 			}
-			else if(list.get(j) == -52){
+			else if(list.get(j) == (double)treeDepth.get("higherLevel")){
 				if(actElement.getNodeName() == "desicionTree"){
-					list.set(j, -51.0);	
+					list.set(j, (double)treeDepth.get("sameLevel"));	
 				}
 				else{ 
 					Element pomElement = (Element)actElement.getParentNode();
@@ -347,7 +357,7 @@ public class GP {
 					}
 				}
 			}
-			if(list.get(j) == 16)
+			if(list.get(j) == TreeParameterSeparator)
 				break;
 			j++;
 		}
@@ -424,9 +434,13 @@ public class GP {
 		actElement.appendChild(newElement);
 		AddAttr(doc, newElement,"function", func);
 		AddAttr(doc, newElement,"type", "sk.fiit.robocup.library.geometry.Angles");
-		if(param2 != null){
+		if(param2 != null && param1 != null){
 			param1 = param1.concat("," + param2);
 		}
+		if(param1 == null && param2!= null){
+			param1 = param2;
+		}
+			
 		AddAttr(doc, newElement,"params", param1);
 		if(lowSkill != null){
 			newElement.setTextContent(lowSkill);
@@ -457,25 +471,16 @@ public class GP {
 	}
 	
 	private List<Double> mutate(List<Double> list){
-		double mutationRate = 0.03;
-		double insertConditionRate = 0.45;
-		double deleteConditionRate = 0.70;
-		double maxChangeValue = 0.1;
-		int maxSizeList = 150;
-		int n = 0;
-		int random = 0;
+		
 		Map<String, Integer> c = null;
 		int i = 0;
-		boolean isEmpty = list.get(0) == 16;
-		while(list.get(i) != 16 || isEmpty){
+		boolean isEmpty = list.get(0) == TreeParameterSeparator;
+		while(list.get(i) != TreeParameterSeparator || isEmpty){
 			c = classify(list.get(i));
-			if(c != null && (c.equals(treeDepth) || c.equals(functions))){
-				mutationRate =  0.04;//(100 - list.size()) * 0.05 + mutationRate ;
-			}
-			else{
-				mutationRate = 0.03;
-			}
-			//System.out.println(i + ":" + list.get(i));
+			/*if(c != null && (c.equals(treeDepth) || c.equals(functions))){
+				mutationRate += 0.01;
+			}*/
+			
 			 n = rand.nextInt(100) + 1;
 			 if(isEmpty){
 					//System.out.println("insert");
@@ -513,11 +518,11 @@ public class GP {
 					}
 					else if((double)list.get(i) == c.get("else")){
 						list.set(i-1, (double)rand.nextInt(agentVariables.size()) + Collections.min(agentVariables.values()));
-						list.set(i+1, 1000.0);
+						list.add(i+1,  (double)rand.nextInt( parameters.size()) + Collections.min(parameters.values()));
 					}
 				}
 				
-				if(c != null && c.equals(treeDepth) && list.get(i+1) != 16){
+				if(c != null && c.equals(treeDepth) && list.get(i+1) != TreeParameterSeparator){
 					//System.out.println("treeDepth");
 					 n = rand.nextInt(100) + 1;
 					if(((double)n/100) < insertConditionRate && list.size() < maxSizeList){
@@ -529,12 +534,18 @@ public class GP {
 						}
 						changeToRandom = false;
 						n = rand.nextInt(100) + 1;
-						if(n < 50){
+						if(n < 40){
+							list.add(i,  (double)rand.nextInt(parameters.size()) + Collections.min(parameters.values()));
+							list.add(i, (double)rand.nextInt(desicions.size()) + Collections.min(desicions.values()));
+							list.add(i, (double)rand.nextInt(agentVariables.size()) + Collections.min(agentVariables.values()));
+						}
+						else if(n < 70)
+						{
 							list.add(i,  1000.0);
 							list.add(i, (double)rand.nextInt(desicions.size()) + Collections.min(desicions.values()));
 							list.add(i, (double)rand.nextInt(agentVariables.size()) + Collections.min(agentVariables.values()));
 						}
-						else{
+						else {
 							double func = (double)rand.nextInt(functions.size()) + Collections.min(functions.values());
 							if(func == functions.get("straight")){
 								list.add(i,  (double)angles.get("straightRange1"));
@@ -542,7 +553,7 @@ public class GP {
 							}
 							else{
 								list.add(i, 0.0);
-								list.add(i, func - 13);
+								list.add(i, func - 12);
 							}
 							list.add(i, func);
 						}
@@ -559,10 +570,10 @@ public class GP {
 						if(flagAdd)
 							i++;
 					}
-					else if (((double)n/100) > (1 -deleteConditionRate) && list.get(i) != -52){
+					else if (((double)n/100) < deleteConditionRate && list.get(i) != (double)treeDepth.get("higherLevel")){
 						//System.out.println("delete");
 						for(int j = 0; j < 4; j++){
-							if(list.get(i) == 16)
+							if(list.get(i) == TreeParameterSeparator)
 								break;
 							list.remove(i);
 						}
@@ -582,7 +593,7 @@ public class GP {
 					list.set(i, (double)random);
 				}
 			}
-			if(i >= 0 && list.get(i) == 16){
+			if(i >= 0 && list.get(i) == TreeParameterSeparator){
 				break;
 			}
 			i++;

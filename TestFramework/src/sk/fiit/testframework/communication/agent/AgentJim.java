@@ -150,14 +150,7 @@ public class AgentJim {
 	 * @throws IOException
 	 */	
 	private void sendCommand(String command) throws IOException {
-		//ByteArrayInputStream bais = new ByteArrayInputStream(command.getBytes("UTF-8"));
-		/*tftpClient.open();
-		tftpClient.sendFile("setHighSkill", TFTPClient.BINARY_MODE, bais, "127.0.0.1", getTFTPAddress().getPort());
-		tftpClient.close();*/
-		
-		
 		ms.sendMessage(command);
-		logger.finer("HighSkill dt set");
 	}
 	
 	/**

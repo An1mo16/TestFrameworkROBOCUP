@@ -4,20 +4,19 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 public class MessageSender{
 	Socket requestSocket;
     ObjectOutputStream out;
-    static int port = 3072;
+    static int port = 3541;
     String message;
     MessageSender(){}
     public void run()
     {
         try{
-            //1. creating a socket to connect to the server
             requestSocket = new Socket("localhost", port);
             System.out.println("Connected to localhost in port " + port);
-            //2. get Input and Output streams
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();
 
@@ -35,7 +34,7 @@ public class MessageSender{
         try{
             out.writeObject(msg);
             out.flush();
-            System.out.println("client>" + msg);
+            Logger.getGlobal().info("client>" + msg);
         }
         catch(IOException ioException){
             ioException.printStackTrace();
