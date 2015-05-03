@@ -12,6 +12,7 @@ import java.util.List;
 
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.DtWalkToBall;
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.DtWalkToBallBypassObstacles;
+import sk.fiit.testframework.trainer.testsuite.testcases.tournament.DtWalkToBallModelSituation;
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.KickAccuracy;
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.KickDistance;
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.StandUp;
@@ -25,9 +26,10 @@ import sk.fiit.testframework.trainer.testsuite.testcases.tournament.WalkStable;
 public class TestCaseList {
 	
 	public static List<TestHolder> testCaseList = Collections.synchronizedList(new LinkedList<TestHolder>());
-	
+	public static Thread isRunning = null;
 	static {
 		testCaseList.add(new TestHolder("DtWalkToBallBypassObstacles", 		new DtWalkToBallBypassObstacles()));
+		testCaseList.add(new TestHolder("DtWalkToBallModelSituation", 		new DtWalkToBallModelSituation()));
 		testCaseList.add(new TestHolder("DtWalkToBall", 			new DtWalkToBall()));
 		testCaseList.add(new TestHolder("Kopanie - vzdialenost", 	new KickDistance()));
 		testCaseList.add(new TestHolder("Kopanie - presnost", 		new KickAccuracy()));

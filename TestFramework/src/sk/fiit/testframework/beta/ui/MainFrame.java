@@ -291,12 +291,12 @@ public class MainFrame extends javax.swing.JFrame implements ISimulationStateObs
 
 		        //Implementation impl = ImplementationFactory.getImplementationInstance();
 				//impl.enqueueTestCase(testCase, null);
-		        
-				TestCaseList.testCaseList.get(
+		        Thread testThread = new Thread(TestCaseList.testCaseList.get(
 						testCaseComboBox.getSelectedIndex()
-						).runnable.run();
-
-		        
+						).runnable);
+		        testThread.start();
+				
+				TestCaseList.isRunning = testThread;
 			}
 		});
 		controlPanel.add(startButton);
@@ -317,6 +317,7 @@ public class MainFrame extends javax.swing.JFrame implements ISimulationStateObs
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 		        startButton.requestFocusInWindow();
+		        TestCaseList.isRunning.stop();
 		        isStopped = true;
 			}
 		});

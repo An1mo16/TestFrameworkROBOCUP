@@ -204,7 +204,7 @@ public class AgentManager implements IAgentMonitorListener {
 		command.add("-cp");
 		command.add(classpath);
 		command.add(className);
-		command.add("-runGui=true");
+		command.add("-runGui=false");
 		command.add("-uniform=" + String.valueOf(uniform));
 		command.add("-team=" + team);
 		command.add("-TestFramework_monitor_enable=true");

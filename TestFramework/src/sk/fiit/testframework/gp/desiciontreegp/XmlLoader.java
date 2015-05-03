@@ -1,9 +1,16 @@
-package sk.fiit.testframework.GEP.desiciontreeGEP;
+package sk.fiit.testframework.gp.desiciontreegp;
 
 import javax.xml.parsers.*;
 
 import org.w3c.dom.Document;
 
+import sk.fiit.jim.Settings;
+
+/**
+ * 
+ * @author Július Skrisa
+ *
+ */
 public class XmlLoader {
 		public static Document Load(String file){
 			//get the factory
@@ -13,7 +20,7 @@ public class XmlLoader {
 
 				DocumentBuilder db = dbf.newDocumentBuilder();
 				
-				Document dom = db.parse("C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/" + file);
+				Document dom = db.parse(Settings.getString("desicion_file_path") + file);
 
 				return dom;
 				

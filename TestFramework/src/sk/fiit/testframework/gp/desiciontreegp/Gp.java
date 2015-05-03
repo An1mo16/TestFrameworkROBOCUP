@@ -1,4 +1,4 @@
-package sk.fiit.testframework.GEP.desiciontreeGEP;
+package sk.fiit.testframework.gp.desiciontreegp;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,12 +36,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import sk.fiit.jim.Settings;
 import sk.fiit.testframework.init.Implementation;
 import sk.fiit.testframework.init.ImplementationFactory;
 import sk.fiit.testframework.trainer.testsuite.TestCaseResult;
 import sk.fiit.testframework.trainer.testsuite.testcases.tournament.DtWalkToBallTest;
 
-public class GP {
+
+/**
+ * 
+ * @author Július Skrisa
+ *
+ */
+public class Gp {
 	public int populationLength;
 	public List<String> Population = null; 
 	public List<List<Double>> PopulationData = null;
@@ -49,11 +56,11 @@ public class GP {
 	private double goalFitness;
 	private String maxFitnessFile;
 	private Random rand;
-	private int LOG_FITNESS = 5000;
-	private String PATH ="/C:/Users/Julius/Git/TestFramework/Jim/dtHighskills/";
+	private int LOG_FITNESS = 1000;
+	private String PATH = Settings.getString("desicion_file_path");
 	
-	double mutationRate = 0.03;
-	double insertConditionRate = 0.45;
+	double mutationRate = 0.02;
+	double insertConditionRate = 0.50;
 	double deleteConditionRate = 0.30;
 	int maxSizeList = 150;
 	int n = 0;
@@ -71,7 +78,13 @@ public class GP {
 	private String pathOfDt;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private DateFormat dateFormatFile = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-	public GP(String path, double goalF, int popLength){
+	
+	/*
+	 * path - cesta + prefix xml suborov 
+	 * goalf - cielova fitness honota
+	 * popLength - velkost populacie
+	 */
+	public Gp(String path, double goalF, int popLength){
 		agentVariables.put("r", 101);
 		agentVariables.put("x", 102);
 		agentVariables.put("y", 103);
@@ -195,7 +208,6 @@ public class GP {
 			if(sibling && result.size() > 0 && result.get(result.size() -1) != (double)treeDepth.get("higherLevel")) result.add((double)treeDepth.get("sameLevel"));
 			if(child.getNodeName().equals("desicion")){
 				
-				
 				String condition = "";
 				String function = "";
 				if(!(condition = GetAttr(child, "condition")).equals("")){
@@ -228,7 +240,7 @@ public class GP {
 						for(i = 0; i < params.length; i++){
 							result.add((double)angles.get(params[i]));
 						}
-						if(i == 1){
+						if(params.length == 1){
 							result.add(0.0);
 						}
 					}
@@ -263,6 +275,11 @@ public class GP {
 	    return false;
 	}
 	
+	/*
+	 * 
+	 *	Uloženie jedincov do Xml suborov
+	 *
+	 */
 	private void DataToXml(String file, List<Double> list) {
 		Document doc = XmlLoader.Load(file + ".xml");
 		
@@ -656,16 +673,25 @@ public class GP {
 		return null;
 	}
 	
+	/*
+	 * Mutacia generacie
+	 */
 	public void Mutate(){
 		for(int i = 0; i < populationLength; i++){
 			PopulationData.set(i, mutate(PopulationData.get(i)));
 		}
 	}
 	
+	/*
+	 * Vytvorit XML subor jedinca i
+	 */
 	public void DataToXml(int i){
 		DataToXml(Population.get(i), PopulationData.get(i));
 	}
 	
+	/*
+	 * Ulozit jedinca s fitness vacsou ako LOG_FITNESS
+	 */
 	public void SaveBestFitnessFile(List<TestCaseResult> testResults){
 		for(int i = 0; i < populationLength; i++){
 			if (maxFitness < testResults.get(i).getFitness()){
@@ -692,10 +718,16 @@ public class GP {
 		maxFitness = 0;
 	}
 	
+	/*
+	 * Kontrola generacie ak sa vyskytuje jedinec s cielovou fintess hodnotou alebo vyssou
+	 */
 	public boolean ConditionSatisfied(){
 		return maxFitness >= goalFitness;
 	}
 	
+	/*
+	 * Vyber
+	 */
 	public void Selection(List<TestCaseResult> testResults){
 		if(testResults != null){
 			Random rng = new Random();
@@ -723,6 +755,9 @@ public class GP {
 		}
 	}
 	
+	/*
+	 * Krizenie
+	 */
 	public void Crossover(){
 		int length = PopulationData.get(0).size();
 		Random rng = new Random();
@@ -737,6 +772,9 @@ public class GP {
 		}
 	}
 	
+	/*
+	 * Nacitanie XML suborov do polí ktore reprezentuju jedincov
+	 */
 	public void XmlToData(){
 		for(int i = 1; i <= populationLength; i++){
 			Population.add(pathOfDt + i);

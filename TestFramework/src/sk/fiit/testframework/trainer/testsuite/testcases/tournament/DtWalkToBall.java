@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import sk.fiit.testframework.GEP.desiciontreeGEP.*;
+import sk.fiit.testframework.gp.desiciontreegp.*;
 import sk.fiit.testframework.init.Implementation;
 import sk.fiit.testframework.init.ImplementationFactory;
 import sk.fiit.testframework.trainer.testsuite.ITestCaseObserver;
@@ -22,7 +22,7 @@ public class DtWalkToBall implements Runnable, ITestCaseObserver {
 	@Override
 	public void run() {
 		
-		GP ga = new GP("dtWalk2Ball", 1000,50);
+		Gp ga = new Gp("dtWalk2Ball", 1000,50);
 		
 		while(!ga.ConditionSatisfied()){
 			

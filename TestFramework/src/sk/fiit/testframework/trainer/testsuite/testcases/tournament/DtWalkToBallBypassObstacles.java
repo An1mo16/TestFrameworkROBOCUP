@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import sk.fiit.testframework.GEP.desiciontreeGEP.*;
 import sk.fiit.testframework.communication.agent.AgentJim;
 import sk.fiit.testframework.communication.agent.AgentManager;
+import sk.fiit.testframework.gp.desiciontreegp.*;
 import sk.fiit.testframework.init.Implementation;
 import sk.fiit.testframework.init.ImplementationFactory;
 import sk.fiit.testframework.trainer.testsuite.ITestCaseObserver;
@@ -26,9 +26,12 @@ public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver 
 		
 		Implementation impl = ImplementationFactory.getImplementationInstance();
 		
-		GP ga = new GP("dtWalk2Ball", 1500,50);
+		//Vytvorenie triedy vykonavajucej geneticke operacie
+		Gp ga = new Gp("dtWalk2Ball", 5000,50);
+		
 		while(!ga.ConditionSatisfied()){
 			
+			//Vygenerovat Data na zaklade XML suborov s rozhodovaniami
 			ga.ReplaceXmlInData();
 
 			ga.Selection(testResults);
@@ -38,15 +41,16 @@ public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver 
 			ga.Mutate();
 			
 			testResults = new ArrayList<TestCaseResult>();
-					
+				
+			//Pre kazdeho jedinca  obnovit XML subor z dát a spustit overovanie
 			for(int i = 0; i < ga.populationLength; i++){
 				ga.DataToXml(i);
 				impl.enqueueTestCase(new DtWalkToBallBypassObstaclesTest(ga.Population.get(i)), this);	 // tu sa vytvori parameter kde sa vlozi nazov xml suboru kde je rozhodovaci strom
 				
 				
 			}
-			for(int i = 0; i < ga.populationLength; i++){
-				}
+			
+			//Ak su ukoncene vsetky testy 
 			while(testResults.size() != ga.populationLength){
 				try {
 					Thread.sleep(1000);
@@ -56,6 +60,7 @@ public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver 
 				}
 			}
 			
+			//Ulozit subory s najlesou fitness hodnotou zalogovat vysledky
 			ga.SaveBestFitnessFile(testResults);
 			
 		}
@@ -65,20 +70,5 @@ public class DtWalkToBallBypassObstacles implements Runnable, ITestCaseObserver 
 	public void testFinished(TestCaseResult result) {
 		testResults.add(result);
 		
-	/*	logger.log(Level.INFO,"Value returned by test "+testResults.size()+" of "+LOOPS+": "+result.getFitness());
-		if (testResults.size() == LOOPS) {
-			evaluateResult(testResults);
-			testResults.clear();
-		}*/
-		
-	}
-	
-	private void evaluateResult(List<TestCaseResult> results) {
-		double result = Double.MAX_VALUE;
-		for (TestCaseResult testCaseResult : results) {
-			double fitnes = testCaseResult.getFitness();
-			if (fitnes < result) result = fitnes;
-		}
-		logger.info("TEST CASE ENDED successfully with result: " + result);
 	}
 }

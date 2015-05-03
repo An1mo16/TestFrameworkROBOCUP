@@ -1,9 +1,13 @@
-package sk.fiit.testframework.GEP.desiciontreeGEP;
+package sk.fiit.testframework.gp.desiciontreegp;
 
 import sk.fiit.robocup.library.geometry.Point3D;
 import sk.fiit.robocup.library.geometry.Vector3;
 import sk.fiit.testframework.communication.agent.AgentJim;
-
+/**
+ * 
+ * @author Július Skrisa
+ *
+ */
 public class AgentSimulation{
 	private Vector3 InitPos;
 	private Vector3 DifVector;
@@ -15,7 +19,10 @@ public class AgentSimulation{
 	private double SendDataTimeStep;
 	private int DataSentCounter = 1;
 	
-	public AgentSimulation(boolean isStatic, Vector3 initPos,  AgentJim agent, Vector3 finalPos, double timeOfSimulation, double sendDataTimeStep ){
+	/*
+	 * Vytvorenie dynamickej prekazky
+	 */
+	public AgentSimulation(boolean isStatic, Vector3 initPos,  AgentJim agent, double sendDataTimeStep, Vector3 finalPos, double timeOfSimulation ){
 		ActPos = InitPos = initPos;
 		DifVector = finalPos.subtract(InitPos);
 		IsStatic = isStatic;
@@ -25,22 +32,32 @@ public class AgentSimulation{
 		SendDataTimeStep = sendDataTimeStep;
 	}
 	
-	public AgentSimulation(boolean isStatic, Vector3 initPos,  AgentJim agent){
+	 /*
+	  * Vytvorenie statickej prekazky
+	  */
+	public AgentSimulation(boolean isStatic, Vector3 initPos,  AgentJim agent, double sendDataTimeStep){
 		ActPos = InitPos = initPos;
 		IsStatic = isStatic;
+		Agent = agent; 
 		ActTimeOfSimulation = 0;
+		SendDataTimeStep = sendDataTimeStep;
 	}
 	
+	/*
+	 * Vrati akutalnu poziciu simulacneho hraca pola casu testu
+	 */
 	public Vector3 getPosition(double simulationTime){
 		if(!IsStatic){
 			ActTimeOfSimulation = simulationTime;
 			ActPos = CalculatePosition();
+			
 			
 		}
 		if(simulationTime > SendDataTimeStep*DataSentCounter){
 			Agent.setCoordinates(ActPos);
 			DataSentCounter++;
 		}
+
 		return ActPos;
 	}
 	
@@ -58,7 +75,7 @@ public class AgentSimulation{
 		result.setY( 
 				InitPos.getY() + (DifVector.getY() * actPart)
 				);
-		result.setY( 
+		result.setZ( 
 				InitPos.getZ() + (DifVector.getZ() * actPart)
 				);
 		
