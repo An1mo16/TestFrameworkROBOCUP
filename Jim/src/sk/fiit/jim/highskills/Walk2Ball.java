@@ -1,21 +1,21 @@
 package sk.fiit.jim.highskills;
 
+import java.util.ArrayList;
+
 import sk.fiit.jim.Settings;
 import sk.fiit.jim.agent.AgentInfo;
 import sk.fiit.jim.agent.models.AgentModel;
 import sk.fiit.jim.agent.models.DynamicObject;
+import sk.fiit.jim.agent.models.Player;
 import sk.fiit.jim.agent.models.WorldModel;
 import sk.fiit.jim.agent.moves.LowSkill;
 import sk.fiit.jim.agent.moves.LowSkills;
+import sk.fiit.jim.agent.server.SocketServer;
 import sk.fiit.jim.agent.skills.HighSkill;
 import sk.fiit.jim.desiciontree.XmlDesicionLoader;
 import sk.fiit.robocup.library.geometry.Angles;
 import sk.fiit.robocup.library.geometry.Vector3D;
 
-/**
- *
- * Reimplemented from Ruby to Java by roman moravcik
- */
 
 public class Walk2Ball extends HighSkill {
     // TODO y1,y2,x1,x2,mediumDistance, closeDistance should be static
@@ -34,9 +34,11 @@ public class Walk2Ball extends HighSkill {
     private Angles leftRange2 = new Angles(20.0, 35.0);
     private Angles leftRange = new Angles(35.0, 180.0);
     Vector3D target;
-
-	//Todo #Task(Implement validity_proc) #Solver(xmarkech) #Priority() | xmarkech 2013-12-10T20:27:54.6970000Z
     
+    ArrayList<Player> opponentPlayers = WorldModel.getInstance().getOpponentPlayers();
+    double minDistance = Integer.MAX_VALUE;
+    int minDistancePlayerIndex = -1;
+
     @Override
     public LowSkill pickLowSkill() {
 
@@ -44,21 +46,28 @@ public class Walk2Ball extends HighSkill {
         AgentModel agentModel = AgentModel.getInstance();
         this.target = agentInfo.ballControlPosition();
         DynamicObject ball = WorldModel.getInstance().getBall();
+        
+        
+        for(int i = 0; i < opponentPlayers.size(); i++){
+        	if(opponentPlayers.get(i).getPosition().getXYDistanceFrom(agentModel.getPosition()) < minDistance){
+        		minDistance = opponentPlayers.get(i).getPosition().getXYDistanceFrom(agentModel.getPosition());
+        		minDistancePlayerIndex = i;
+        		System.out.println("Min i:" + i + " " + minDistance);
+        	}
+        }
+        
+        WorldModel.getInstance().getOpponentPlayers();
 
         if (agentModel.isLyingOnBack() || agentModel.isLyingOnBelly() || agentModel.isOnGround()) {
             return null;
         }
 
         if (ball.notSeenLongTime() >= 5) {
-      //      return null;
+            //return null;
         }
         
-        String file = "";
-        if(!Settings.getString("dtWalk2Ball").isEmpty())
-        	file = Settings.getString("dtWalk2Ball");
-       
         
-        XmlDesicionLoader pickLowSkill = new XmlDesicionLoader(file, (HighSkill)this);
+        XmlDesicionLoader pickLowSkill = new XmlDesicionLoader(/*Settings.getString("dtWalk2Ball")*/"dtWalk2BallorigR", (HighSkill)this);
         
         return LowSkills.get(pickLowSkill.GetLowSkill());
        /* // je blizko lopty
@@ -94,7 +103,7 @@ public class Walk2Ball extends HighSkill {
                     return LowSkills.get("walk_back");
                 } else if (target.getX() > x2) {
                     //agentInfo.loguj("ZONA 5")
-                    return LowSkills.get("walk_back");
+                    return LowSkills.get("walk_back");16
                 } else if (target.getX() > 0) {
                     //agentInfo.loguj("ZONA 7")
                     return LowSkills.get("step_right");
@@ -152,32 +161,103 @@ public class Walk2Ball extends HighSkill {
     	return target.getX();
     }
     
+    public double getXR(){
+    	if(minDistancePlayerIndex == -1)
+    		return Integer.MAX_VALUE;
+    	return opponentPlayers.get(minDistancePlayerIndex).getRelativePosition().getX();
+    	//return SocketServer.getXR(); - vrati suradnice simulovaneho protihraca z testframeworku
+    }
+    
+    public double getYR(){
+    	if(minDistancePlayerIndex == -1)
+    		return Integer.MAX_VALUE;
+    	System.out.println(opponentPlayers.get(minDistancePlayerIndex).getRelativePosition().getY() + "d:" + opponentPlayers.get(minDistancePlayerIndex).getPosition().getY());
+    	return opponentPlayers.get(minDistancePlayerIndex).getRelativePosition().getY();
+    	//return SocketServer.getYR(); - vrati suradnice simulovaneho protihraca z testframeworku
+    }
+    
     
     public boolean straight(Angles straightRange1, Angles straightRange2) {
+    	if(straightRange1 == null || straightRange2 == null)
+    		return false;
         return straightRange1.include(target.getPhi()) || straightRange2.include(target.getPhi());
     }
 
+    public boolean straight(Angles straightRange1) {
+    	if(straightRange1 == null)
+    		return false;
+        return straightRange1.include(target.getPhi());
+    }
+    
     public boolean left_and_distant(Angles leftRange) {
+    	if(leftRange == null)
+    		return false;
+        return leftRange.include(Angles.normalize(target.getPhi()));
+    }
+    
+    public boolean left_and_distant(Angles leftRange, Angles l) {
+    	if(leftRange == null)
+    		return false;
         return leftRange.include(Angles.normalize(target.getPhi()));
     }
 
     public boolean left_and_distant_less(Angles leftRange2) {
+    	if(leftRange2 == null)
+    		return false;
+        return leftRange2.include(Angles.normalize(target.getPhi()));
+    }
+    
+    public boolean left_and_distant_less(Angles leftRange2, Angles l) {
+    	if(leftRange2 == null)
+    		return false;
         return leftRange2.include(Angles.normalize(target.getPhi()));
     }
 
     public boolean left_and_distant_bit(Angles leftRange3) {
+    	if(leftRange3 == null)
+    		return false;
+        return leftRange3.include(Angles.normalize(target.getPhi()));
+    }
+    
+    public boolean left_and_distant_bit(Angles leftRange3, Angles l) {
+    	if(leftRange3 == null)
+    		return false;
         return leftRange3.include(Angles.normalize(target.getPhi()));
     }
 
     public boolean right_and_distant(Angles rightRange) {
+    	if(rightRange == null)
+    		return false;
+        return rightRange.include(Angles.normalize(target.getPhi()));
+    }
+    
+    public boolean right_and_distant(Angles rightRange, Angles l) {
+    	if(rightRange == null)
+    		return false;
         return rightRange.include(Angles.normalize(target.getPhi()));
     }
 
     public boolean right_and_distant_less(Angles rightRange2) {
+    	if(rightRange2 == null)
+    		return false;
+        return rightRange2.include(Angles.normalize(target.getPhi()));
+    }
+    
+    public boolean right_and_distant_less(Angles rightRange2, Angles l) {
+    	if(rightRange2 == null)
+    		return false;
         return rightRange2.include(Angles.normalize(target.getPhi()));
     }
 
     public boolean right_and_distant_bit(Angles rightRange3) {
+    	if(rightRange3 == null)
+    		return false;
+        return rightRange3.include(Angles.normalize(target.getPhi()));
+    }
+    
+    public boolean right_and_distant_bit(Angles rightRange3, Angles l) {
+    	if(rightRange3 == null)
+    		return false;
         return rightRange3.include(Angles.normalize(target.getPhi()));
     }
 
